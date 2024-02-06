@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Poll {
+  id          String   @id @default(cuid())
+  title       String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updadatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("poll")
+}

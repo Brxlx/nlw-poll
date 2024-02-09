@@ -1,6 +1,7 @@
 import z from "zod";
 import { prisma } from "../lib/prisma";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { redis } from "../lib/redis";
 
 export async function getPoll(server: FastifyInstance) {
 
@@ -22,8 +23,32 @@ export async function getPoll(server: FastifyInstance) {
       }
     })
 
-    if (!poll) return res.status(404).send({ message: 'Not Found.' })
+    if (!poll) return res.status(404).send({ message: 'Not Found.' });
 
-    return res.status(200).send({ poll });
+    const getPollScores = await redis.zrange(poll_id, 0, -1, 'WITHSCORES', () => console.log('Trouxe os scores do redis'));
+
+
+    // {id: 3}
+    const votes = getPollScores.reduce((obj, line, index) => {
+      if (index % 2 === 0) {
+        const score = getPollScores[index + 1];
+        Object.assign(obj, { [line]: Number(score) });
+      }
+
+      return obj;
+    }, {} as Record<string, number>);
+
+
+    return res.status(200).send({
+      poll: {
+        id: poll.id,
+        title: poll.title,
+        options: poll.options.map(opt => ({
+          id: opt.id,
+          title: opt.title,
+          score: (opt.id in votes) ? votes[opt.id] : 0
+        }))
+      }
+    });
   });
 }

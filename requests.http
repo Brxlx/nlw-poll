@@ -2,6 +2,7 @@
 @baseUrl = http://localhost
 
 @host = {{baseUrl}}:{{port}}
+@ws_host = ws://localhost:{{port}}
 
 ###
 # Get poll info
@@ -9,10 +10,15 @@
 GET {{host}}/polls/clseqmccs00005odpe3rmh98j
 
 ###
+# Get poll info
+# @name getPollResults
+GET {{ws_host}}/polls/clseqmccs00005odpe3rmh98j/results
+
+###
 # Create Poll
 # @name createPoll
 POST {{host}}/polls
-content-type: application/json
+Content-type: application/json
 
 {
   "title": "Qual o melhor micro-framework Node.js?",
@@ -23,7 +29,7 @@ content-type: application/json
 # Vote on Poll
 # @name voteOnPoll
 POST {{host}}/polls/clseqmccs00005odpe3rmh98j/votes
-content-type: application/json
+Content-type: application/json
 
 {
   "poll_option_id": "clseqmccs00025odpq2hggmy2"

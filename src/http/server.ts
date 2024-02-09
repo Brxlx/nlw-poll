@@ -4,6 +4,8 @@ import cookie from '@fastify/cookie';
 import { createPoll } from '../routes/create-poll';
 import { getPoll } from '../routes/get-poll';
 import { voteOnPoll } from '../routes/vote-on-poll';
+import websocket from '@fastify/websocket';
+import { pollResults } from '../ws/poll-results';
 
 const server = fastify();
 
@@ -12,9 +14,12 @@ server.register(cookie, {
   hook: "onRequest",
 });
 
+server.register(websocket);
+
 server.register(createPoll);
 server.register(getPoll);
 server.register(voteOnPoll);
+server.register(pollResults);
 
 
 

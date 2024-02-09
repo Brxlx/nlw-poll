@@ -2,6 +2,8 @@ import z from "zod";
 import { prisma } from "../lib/prisma";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { randomUUID } from "node:crypto";
+import { redis } from "../lib/redis";
+import { voting } from "../utils/Voting-Pub-Sub";
 
 
 export async function voteOnPoll(server: FastifyInstance) {
@@ -37,6 +39,15 @@ export async function voteOnPoll(server: FastifyInstance) {
             id: userPreviousVotedOnPoll.id
           }
         });
+        // Create/Update the score
+        const votes = await redis.zincrby(poll_id, -1, userPreviousVotedOnPoll.poll_option_id, () => console.log('O pai decrementou'));
+
+        // Publish the message
+        voting.publish(poll_id, {
+          poll_option_id: userPreviousVotedOnPoll.poll_option_id,
+          votes: Number(votes)
+        });
+
       } else if (userPreviousVotedOnPoll) {
         // Já votou nesta mesma opção
         return res.status(400).send({ message: "You already voted on this option on this poll." });
@@ -60,7 +71,15 @@ export async function voteOnPoll(server: FastifyInstance) {
         poll_id,
         poll_option_id
       }
-    })
+    });
+
+    const votes = await redis.zincrby(poll_id, 1, poll_option_id, () => console.log('O pai incrementou'));
+
+    // Publish the message
+    voting.publish(poll_id, {
+      poll_option_id,
+      votes: Number(votes)
+    });
 
 
     return res.status(201).send();

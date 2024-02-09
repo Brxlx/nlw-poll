@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/http/server.ts"
+    "dev": "tsx watch src/http/server.ts",
+    "debug": "tsx watch --inspect-brk src/http/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^9.3.1",
     "@prisma/client": "5.9.1",
     "fastify": "^4.26.0"
   },

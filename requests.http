@@ -1,0 +1,30 @@
+@port = 3333
+@baseUrl = http://localhost
+
+@host = {{baseUrl}}:{{port}}
+
+###
+# Get poll info
+# @name getPolls
+GET {{host}}/polls/clsd7q92k00002n1a9iquej7l
+
+###
+# Create Poll
+# @name createPoll
+POST {{host}}/polls
+content-type: application/json
+
+{
+  "title": "Teste 2",
+  "options": ["opc1", "opc2"]
+}
+
+###
+# Vote on Poll
+# @name voteOnPoll
+POST {{host}}/polls/clsd7q92k00002n1a9iquej7l/votes
+content-type: application/json
+
+{
+  "poll_option_id": "clsd7q92l00022n1ar6wwoo1x"
+}

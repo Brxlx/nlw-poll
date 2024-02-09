@@ -6,7 +6,7 @@
 ###
 # Get poll info
 # @name getPolls
-GET {{host}}/polls/clsd7q92k00002n1a9iquej7l
+GET {{host}}/polls/clseqmccs00005odpe3rmh98j
 
 ###
 # Create Poll
@@ -15,16 +15,16 @@ POST {{host}}/polls
 content-type: application/json
 
 {
-  "title": "Teste 2",
-  "options": ["opc1", "opc2"]
+  "title": "Qual o melhor micro-framework Node.js?",
+  "options": ["Express", "Fastify"]
 }
 
 ###
 # Vote on Poll
 # @name voteOnPoll
-POST {{host}}/polls/clsd7q92k00002n1a9iquej7l/votes
+POST {{host}}/polls/clseqmccs00005odpe3rmh98j/votes
 content-type: application/json
 
 {
-  "poll_option_id": "clsd7q92l00022n1ar6wwoo1x"
+  "poll_option_id": "clseqmccs00025odpq2hggmy2"
 }
